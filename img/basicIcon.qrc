@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="basic">
+    <file>close.png</file>
+    <file>min.png</file>
+    <file>max.png</file>
+    <file>shrink.png</file>
+  </qresource>
+  <qresource prefix="logo">
+    <file>github_change.png</file>
+    <file>ffmpeg_change.png</file>
+    <file>qt_change.png</file>
+  </qresource>
+</RCC>
