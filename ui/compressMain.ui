@@ -411,7 +411,7 @@ background-color: rgb(245,245,245);</string>
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>2</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="page">
         <layout class="QVBoxLayout" name="verticalLayout_4" stretch="2,13">
@@ -488,24 +488,18 @@ border-bottom-color: rgb(220, 220, 220);
 	font-family:&quot;黑体&quot;;
 	font-weight:bold;
 }
-#browseBtn1:hover{
+#pdfBrowseBtn:hover{
 	background-color: rgb(39, 39, 39);
 }
-#browseBtn2:hover{
-	background-color: rgb(39, 39, 39);
-}
-#clearBtn1{
+
+#pdfClearBtn{
 	background-color: rgb(252, 104, 104);
 }
-#clearBtn2{
-	background-color: rgb(252, 104, 104);
-}
-#clearBtn1:hover{
+
+#pdfClearBtn:hover{
 	background-color: rgb(255, 29, 29);
 }
-#clearBtn2:hover{
-	background-color: rgb(255, 29, 29);
-}</string>
+</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_5" stretch="3,19">
          <property name="spacing">
@@ -638,7 +632,7 @@ border-bottom-color: rgb(220, 220, 220);
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="lineEdit">
+                 <widget class="QLineEdit" name="pdfSelectLineEdit">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -670,7 +664,7 @@ border-bottom-color: rgb(220, 220, 220);
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="browseBtn1">
+                 <widget class="QPushButton" name="pdfBrowseBtn">
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -685,7 +679,7 @@ border-bottom-color: rgb(220, 220, 220);
                    </font>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">#browseBtn1:hover{
+                   <string notr="true">#pdfBrowseBtn:hover{
 	background-color: rgb(39, 39, 39);
 }
 #clearBtn1{
@@ -714,7 +708,7 @@ border-bottom-color: rgb(220, 220, 220);
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="clearBtn1">
+                 <widget class="QPushButton" name="pdfClearBtn">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -783,7 +777,7 @@ background-color: rgb(241, 241, 241);
 border-radius:10px;
 }</string>
                </property>
-               <layout class="QGridLayout" name="gridLayout">
+               <layout class="QGridLayout" name="gridLayout" columnstretch="1,2,1,2">
                 <property name="leftMargin">
                  <number>0</number>
                 </property>
@@ -796,7 +790,10 @@ border-radius:10px;
                 <property name="bottomMargin">
                  <number>0</number>
                 </property>
-                <property name="spacing">
+                <property name="horizontalSpacing">
+                 <number>7</number>
+                </property>
+                <property name="verticalSpacing">
                  <number>0</number>
                 </property>
                 <item row="0" column="0">
@@ -848,26 +845,34 @@ border-radius:10px;
                  </widget>
                 </item>
                 <item row="0" column="3">
-                 <widget class="QLabel" name="label_16">
+                 <widget class="QLabel" name="fileTypeLabel">
                   <property name="font">
                    <font>
                     <family>Microsoft YaHei UI</family>
+                    <pointsize>8</pointsize>
                    </font>
                   </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: rgb(48, 48, 48);</string>
+                  </property>
                   <property name="text">
-                   <string>TextLabel</string>
+                   <string>FileType</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="3">
-                 <widget class="QLabel" name="label_18">
+                 <widget class="QLabel" name="modifyTimeLabel">
                   <property name="font">
                    <font>
                     <family>Microsoft YaHei UI</family>
+                    <pointsize>8</pointsize>
                    </font>
                   </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: rgb(48, 48, 48);</string>
+                  </property>
                   <property name="text">
-                   <string>TextLabel</string>
+                   <string>ModifyTime</string>
                   </property>
                  </widget>
                 </item>
@@ -888,14 +893,18 @@ border-radius:10px;
                  </widget>
                 </item>
                 <item row="1" column="3">
-                 <widget class="QLabel" name="label_17">
+                 <widget class="QLabel" name="filePagesLabel">
                   <property name="font">
                    <font>
                     <family>Microsoft YaHei UI</family>
+                    <pointsize>8</pointsize>
                    </font>
                   </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: rgb(48, 48, 48);</string>
+                  </property>
                   <property name="text">
-                   <string>TextLabel</string>
+                   <string>Pages</string>
                   </property>
                  </widget>
                 </item>
@@ -916,26 +925,34 @@ border-radius:10px;
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QLabel" name="label_13">
+                 <widget class="QLabel" name="fileNameLabel">
                   <property name="font">
                    <font>
                     <family>Microsoft YaHei UI</family>
+                    <pointsize>8</pointsize>
                    </font>
                   </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: rgb(48, 48, 48);</string>
+                  </property>
                   <property name="text">
-                   <string>TextLabel</string>
+                   <string>FileName</string>
                   </property>
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QLabel" name="label_14">
+                 <widget class="QLabel" name="fileSizeLabel">
                   <property name="font">
                    <font>
                     <family>Microsoft YaHei UI</family>
+                    <pointsize>8</pointsize>
                    </font>
                   </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: rgb(48, 48, 48);</string>
+                  </property>
                   <property name="text">
-                   <string>TextLabel</string>
+                   <string>FileSize</string>
                   </property>
                  </widget>
                 </item>
@@ -956,14 +973,18 @@ border-radius:10px;
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QLabel" name="label_15">
+                 <widget class="QLabel" name="createTimeLabel">
                   <property name="font">
                    <font>
                     <family>Microsoft YaHei UI</family>
+                    <pointsize>8</pointsize>
                    </font>
                   </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: rgb(48, 48, 48);</string>
+                  </property>
                   <property name="text">
-                   <string>TextLabel</string>
+                   <string>CreateTime</string>
                   </property>
                  </widget>
                 </item>
@@ -1050,7 +1071,7 @@ QRadioButton::indicator::checked {background-color:#7E7B7B}
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QRadioButton" name="radioButton">
+                   <widget class="QRadioButton" name="lowRadioButton">
                     <property name="font">
                      <font>
                       <family>Microsoft YaHei UI</family>
@@ -1063,7 +1084,7 @@ QRadioButton::indicator::checked {background-color:#7E7B7B}
                    </widget>
                   </item>
                   <item>
-                   <widget class="QRadioButton" name="radioButton_2">
+                   <widget class="QRadioButton" name="midRadioButton">
                     <property name="font">
                      <font>
                       <family>Microsoft YaHei UI</family>
@@ -1076,7 +1097,7 @@ QRadioButton::indicator::checked {background-color:#7E7B7B}
                    </widget>
                   </item>
                   <item>
-                   <widget class="QRadioButton" name="radioButton_3">
+                   <widget class="QRadioButton" name="highRadioButton">
                     <property name="font">
                      <font>
                       <family>Microsoft YaHei UI</family>

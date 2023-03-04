@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication
 
-from src.compressMain import CompressMain
+from src.compressMain import CompressMain, DialogMain
 
 if __name__ == '__main__':
     import sys
