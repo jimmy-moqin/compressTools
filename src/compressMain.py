@@ -79,10 +79,12 @@ class CompressMain(QWidget, Ui_CompressWidget):
         else:
             self.usageBtn.setStyleSheet("")
             self.isUsageBtnChecked = False
-        
+        self.setBtnEnabled()
+    
     def pdfBtnEvent(self, event):
-        # 重写pdf事件
+        # 重写pdf事件     
         if not self.isPdfBtnChecked:
+            
             # 清除其他按钮的点击状态
             self.usageBtn.setChecked(False)
             self.videoBtn.setChecked(False)
@@ -109,6 +111,7 @@ class CompressMain(QWidget, Ui_CompressWidget):
         else:
             self.pdfBtn.setStyleSheet("")
             self.isPdfBtnChecked = False
+        self.setBtnEnabled()
     
     def videoBtnEvent(self, event):
         # 重写视频事件
@@ -139,6 +142,7 @@ class CompressMain(QWidget, Ui_CompressWidget):
         else:
             self.videoBtn.setStyleSheet("")
             self.isVideoBtnChecked = False
+        self.setBtnEnabled()
 
     def settingsBtnEvent(self, event):
         # 重写设置事件
@@ -169,6 +173,7 @@ class CompressMain(QWidget, Ui_CompressWidget):
         else:
             self.settingsBtn.setStyleSheet("")
             self.isSettingsBtnChecked = False
+        self.setBtnEnabled()
     
     def donateBtnEvent(self, event):
         # 重写捐赠事件
@@ -196,3 +201,12 @@ class CompressMain(QWidget, Ui_CompressWidget):
         else:
             self.donateBtn.setStyleSheet("")
             self.isDonateBtnChecked = False
+        self.setBtnEnabled()
+
+    def setBtnEnabled(self):
+        for btn in [self.usageBtn, self.pdfBtn, self.videoBtn, self.settingsBtn, self.donateBtn]:
+            if btn.isChecked():
+                btn.setEnabled(False)
+            else:
+                btn.setEnabled(True)
+                
