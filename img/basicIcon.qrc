@@ -1,5 +1,12 @@
 <RCC>
   <qresource prefix="basic">
+    <file>left.png</file>
+    <file>right.png</file>
+    <file>play.png</file>
+    <file>pause.png</file>
+    <file>forward_arrow.png</file>
+    <file>back_arrow.png</file>
+    <file>arrow_down.png</file>
     <file>close.png</file>
     <file>min.png</file>
     <file>max.png</file>

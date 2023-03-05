@@ -189,7 +189,7 @@ border:none;
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,0">
+    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,8">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -411,7 +411,7 @@ background-color: rgb(245,245,245);</string>
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>1</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="page">
         <layout class="QVBoxLayout" name="verticalLayout_4" stretch="2,13">
@@ -1294,9 +1294,9 @@ border-bottom-color: rgb(220, 220, 220);</string>
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
+              <y>-276</y>
               <width>751</width>
-              <height>1213</height>
+              <height>1442</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1339,7 +1339,7 @@ border-bottom-color: rgb(220, 220, 220);</string>
                <item>
                 <layout class="QVBoxLayout" name="verticalLayout_8">
                  <property name="spacing">
-                  <number>5</number>
+                  <number>16</number>
                  </property>
                  <property name="topMargin">
                   <number>11</number>
@@ -1407,7 +1407,7 @@ border-bottom-color: rgb(220, 220, 220);</string>
                      </spacer>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_5">
+                     <widget class="QLineEdit" name="videoPathLineEdit">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -1439,7 +1439,7 @@ border-bottom-color: rgb(220, 220, 220);</string>
                      </spacer>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="browseBtn1_3">
+                     <widget class="QPushButton" name="videoBrowseBtn">
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -1454,12 +1454,10 @@ border-bottom-color: rgb(220, 220, 220);</string>
                        </font>
                       </property>
                       <property name="styleSheet">
-                       <string notr="true">#browseBtn1:hover{
+                       <string notr="true">#videoBrowseBtn:hover{
 	background-color: rgb(39, 39, 39);
 }
-#clearBtn1{
-	background-color: rgb(252, 104, 104);
-}</string>
+</string>
                       </property>
                       <property name="text">
                        <string>浏览</string>
@@ -1483,7 +1481,7 @@ border-bottom-color: rgb(220, 220, 220);</string>
                      </spacer>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="clearBtn1_3">
+                     <widget class="QPushButton" name="videoClearBtn">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -1502,6 +1500,14 @@ border-bottom-color: rgb(220, 220, 220);</string>
                         <weight>75</weight>
                         <bold>true</bold>
                        </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">#videoClearBtn{
+	background-color: rgb(252, 104, 104);
+}
+#videoClearBtn:hover{
+	background-color: rgb(255, 0, 0);
+}</string>
                       </property>
                       <property name="text">
                        <string>清除</string>
@@ -1528,6 +1534,216 @@ border-bottom-color: rgb(220, 220, 220);</string>
                   </widget>
                  </item>
                  <item>
+                  <widget class="QLabel" name="label_13">
+                   <property name="font">
+                    <font>
+                     <family>Microsoft YaHei UI</family>
+                     <pointsize>12</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>源信息</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QWidget" name="widget_14" native="true">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>150</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <family>Microsoft YaHei UI</family>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">.QWidget{
+	background-color: rgb(241, 241, 241);
+	border-radius:10px;
+}
+.QLabel{
+	background-color: rgb(241, 241, 241);
+	font-family:&quot;Microsoft YaHei UI&quot;
+}</string>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_3" columnstretch="1,2,1,2">
+                    <item row="5" column="1">
+                     <widget class="QLabel" name="videoResolutionLabel">
+                      <property name="styleSheet">
+                       <string notr="true">color: rgb(85, 85, 85);</string>
+                      </property>
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="4" column="0">
+                     <widget class="QLabel" name="label_15">
+                      <property name="text">
+                       <string>持续时长</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="0">
+                     <widget class="QLabel" name="label_16">
+                      <property name="text">
+                       <string>源分辨率</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="7" column="0">
+                     <widget class="QLabel" name="label_18">
+                      <property name="text">
+                       <string>源码率</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="6" column="1">
+                     <widget class="QLabel" name="videoFrameLabel">
+                      <property name="styleSheet">
+                       <string notr="true">color: rgb(85, 85, 85);</string>
+                      </property>
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="3" column="0">
+                     <widget class="QLabel" name="label_14">
+                      <property name="text">
+                       <string>视频源</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="3" column="1">
+                     <widget class="QLabel" name="videoPathLabel">
+                      <property name="styleSheet">
+                       <string notr="true">color: rgb(85, 85, 85);</string>
+                      </property>
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="4" column="1">
+                     <widget class="QLabel" name="videoTimeLabel">
+                      <property name="styleSheet">
+                       <string notr="true">color: rgb(85, 85, 85);</string>
+                      </property>
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="6" column="0">
+                     <widget class="QLabel" name="label_17">
+                      <property name="text">
+                       <string>源帧率</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="7" column="1">
+                     <widget class="QLabel" name="videoBitLabel">
+                      <property name="styleSheet">
+                       <string notr="true">color: rgb(85, 85, 85);</string>
+                      </property>
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="3" column="2">
+                     <widget class="QLabel" name="label_40">
+                      <property name="text">
+                       <string>视频格式</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="3" column="3">
+                     <widget class="QLabel" name="videoTypeLabel">
+                      <property name="styleSheet">
+                       <string notr="true">color: rgb(85, 85, 85);</string>
+                      </property>
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="7" column="2">
+                     <widget class="QLabel" name="label_52">
+                      <property name="text">
+                       <string>采样率</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="7" column="3">
+                     <widget class="QLabel" name="audioSampleLabel">
+                      <property name="styleSheet">
+                       <string notr="true">color: rgb(85, 85, 85);</string>
+                      </property>
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="6" column="3">
+                     <widget class="QLabel" name="audioChannelLabel">
+                      <property name="styleSheet">
+                       <string notr="true">color: rgb(85, 85, 85);</string>
+                      </property>
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="6" column="2">
+                     <widget class="QLabel" name="label_51">
+                      <property name="text">
+                       <string>频道</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="2">
+                     <widget class="QLabel" name="label_50">
+                      <property name="text">
+                       <string>音频码率</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="3">
+                     <widget class="QLabel" name="audioBitLabel">
+                      <property name="styleSheet">
+                       <string notr="true">color: rgb(85, 85, 85);</string>
+                      </property>
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="4" column="2">
+                     <widget class="QLabel" name="label_42">
+                      <property name="text">
+                       <string>视频大小</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="4" column="3">
+                     <widget class="QLabel" name="videoSizeLabel">
+                      <property name="styleSheet">
+                       <string notr="true">color: rgb(85, 85, 85);</string>
+                      </property>
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QLabel" name="label_38">
                    <property name="font">
                     <font>
@@ -1541,7 +1757,13 @@ border-bottom-color: rgb(220, 220, 220);</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QVideoWidget" name="widget_11" native="true">
+                  <widget class="QVideoWidget" name="playerWidget" native="true">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                     <horstretch>16</horstretch>
+                     <verstretch>9</verstretch>
+                    </sizepolicy>
+                   </property>
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
@@ -1549,153 +1771,362 @@ border-bottom-color: rgb(220, 220, 220);</string>
                     </size>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">
-	background-color: rgb(241, 241, 241);
-	border-radius:10px;
-</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QWidget" name="widget_12" native="true">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>96</height>
-                    </size>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">.QWidget{
+                    <string notr="true">#playerWidget{
 	background-color: rgb(241, 241, 241);
 	border-radius:10px;
 }</string>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_10">
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_16">
-                      <property name="spacing">
-                       <number>7</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>5</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>5</number>
-                      </property>
-                      <item>
-                       <widget class="QLabel" name="label_41">
-                        <property name="font">
-                         <font>
-                          <family>Microsoft YaHei UI</family>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">background-color: rgb(241, 241, 241);</string>
-                        </property>
-                        <property name="text">
-                         <string>选择起始</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QSlider" name="horizontalSlider_2">
-                        <property name="styleSheet">
-                         <string notr="true">background-color: rgb(241, 241, 241);</string>
-                        </property>
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="label_42">
-                        <property name="font">
-                         <font>
-                          <family>Microsoft YaHei UI</family>
-                         </font>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">background-color: rgb(241, 241, 241);</string>
-                        </property>
-                        <property name="text">
-                         <string>00:00:00</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_15">
-                      <property name="spacing">
-                       <number>7</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>5</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>5</number>
-                      </property>
-                      <item>
-                       <widget class="QLabel" name="label_39">
-                        <property name="font">
-                         <font>
-                          <family>Microsoft YaHei UI</family>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">background-color: rgb(241, 241, 241);</string>
-                        </property>
-                        <property name="text">
-                         <string>选择终止</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QSlider" name="horizontalSlider">
-                        <property name="styleSheet">
-                         <string notr="true">background-color: rgb(241, 241, 241);</string>
-                        </property>
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="label_40">
-                        <property name="font">
-                         <font>
-                          <family>Microsoft YaHei UI</family>
-                         </font>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">background-color: rgb(241, 241, 241);</string>
-                        </property>
-                        <property name="text">
-                         <string>99:99:99</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
                   </widget>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="1,0">
+                   <item>
+                    <widget class="QWidget" name="playBarWidget" native="true">
+                     <layout class="QVBoxLayout" name="verticalLayout_13">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <layout class="QHBoxLayout" name="horizontalLayout_18">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QWidget" name="leftCutWidget" native="true">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>6</height>
+                           </size>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">border:none;</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QWidget" name="widget_11" native="true">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>6</height>
+                           </size>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">background-color: #FC6868;
+border-radius:3px;</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QWidget" name="rightCutWidget" native="true">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>6</height>
+                           </size>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">border:none;</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                      <item>
+                       <widget class="QSlider" name="playerSlider">
+                        <property name="styleSheet">
+                         <string notr="true">.QSlider::handle{
+	background: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5,   
+    stop:0.6 #464646, stop:0.778409 rgba(255, 255, 255, 255));  
+    width: 11px;  
+    margin-top: -3px;  
+    margin-bottom: -3px;  
+    border-radius: 5px;  
+
+}
+.QSlider{
+	margin-top: -3px; 
+	margin-bottom: -3px;  
+}</string>
+                        </property>
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="tickLabel">
+                     <property name="text">
+                      <string>00:00:00:000</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_6">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <spacer name="horizontalSpacer_12">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="leftInBtn">
+                     <property name="styleSheet">
+                      <string notr="true">background-color: rgba(255, 255, 255, 0);
+height:30px;
+width:12.12px;</string>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../img/basicIcon.qrc">
+                       <normaloff>:/basic/left.png</normaloff>:/basic/left.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>30</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_34">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="backBtn">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">#backBtn{
+	width:30px;
+	height:34.2px;
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../img/basicIcon.qrc">
+                       <normaloff>:/basic/back_arrow.png</normaloff>:/basic/back_arrow.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>30</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_32">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="stopBtn">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">#stopBtn{
+	width:50px;
+	height:57px;
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../img/basicIcon.qrc">
+                       <normaloff>:/basic/play.png</normaloff>:/basic/play.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>50</width>
+                       <height>50</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_33">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="forwardBtn">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">#forwardBtn{
+	width:30px;
+	height:34.2px;
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../img/basicIcon.qrc">
+                       <normaloff>:/basic/forward_arrow.png</normaloff>:/basic/forward_arrow.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>30</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_35">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="rightOutBtn">
+                     <property name="styleSheet">
+                      <string notr="true">background-color: rgba(255, 255, 255, 0);
+height:30px;
+width:12.12px;</string>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../img/basicIcon.qrc">
+                       <normaloff>:/basic/right.png</normaloff>:/basic/right.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>30</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_31">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
                  </item>
                  <item>
                   <widget class="QLabel" name="label_19">
@@ -1715,15 +2146,63 @@ border-bottom-color: rgb(220, 220, 220);</string>
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
-                     <height>200</height>
+                     <height>100</height>
                     </size>
                    </property>
                    <property name="styleSheet">
                     <string notr="true">.QWidget{
 	background-color: rgb(241, 241, 241);
 	border-radius:10px;
+}
+.QLabel{
+	background-color: rgb(241, 241, 241);
+	font-family:&quot;Microsoft YaHei UI&quot;;
 }</string>
                    </property>
+                   <layout class="QGridLayout" name="gridLayout_4">
+                    <item row="2" column="0">
+                     <widget class="QLabel" name="label_58">
+                      <property name="text">
+                       <string>片段持续时间</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_56">
+                      <property name="text">
+                       <string>剪辑起始时刻</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="label_57">
+                      <property name="text">
+                       <string>剪辑终止时刻</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QLabel" name="startTickLabel">
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QLabel" name="endTickLabel">
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="1">
+                     <widget class="QLabel" name="durTimeLabel">
+                      <property name="text">
+                       <string>TextLabel</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </widget>
                  </item>
                  <item>
@@ -1755,7 +2234,7 @@ border-bottom-color: rgb(220, 220, 220);</string>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_12">
                     <item>
-                     <widget class="QRadioButton" name="radioButton_7">
+                     <widget class="QRadioButton" name="autoRadioButton">
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -1772,12 +2251,12 @@ border-bottom-color: rgb(220, 220, 220);</string>
                        <string notr="true">background-color: rgb(241, 241, 241);</string>
                       </property>
                       <property name="text">
-                       <string>智能压缩 (默认压缩到60M以内)</string>
+                       <string>智能压缩 (默认压缩为MP4格式，大小在60M以内)</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QRadioButton" name="radioButton_8">
+                     <widget class="QRadioButton" name="customizeRadioButton">
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -1800,16 +2279,206 @@ border-bottom-color: rgb(220, 220, 220);</string>
                     </item>
                     <item>
                      <widget class="QGroupBox" name="groupBox">
-                      <property name="title">
-                       <string>GroupBox</string>
+                      <property name="styleSheet">
+                       <string notr="true">.QGroupBox{
+	background-color: rgb(241, 241, 241);
+	border:none;
+	margin-top:0px;
+}
+.QLabel{
+	background-color: rgb(241, 241, 241);
+	font-family:&quot;Microsoft YaHei UI&quot;;
+}
+.QComboBox{
+	font-family:&quot;Microsoft YaHei UI&quot;;
+	background-color: rgb(241, 241, 241);
+	border:none;
+	border-bottom:solid;
+	border-bottom-color: rgb(59, 59, 59);
+	border-bottom-width:1px;
+}
+.QComboBox::drop-down{
+	border:none;
+}
+.QComboBox::down-arrow {
+	width:20px;height:20px;
+	image: url(:/basic/arrow_down.png);
+}</string>
                       </property>
+                      <property name="title">
+                       <string/>
+                      </property>
+                      <layout class="QGridLayout" name="gridLayout_5" columnstretch="4,1">
+                       <property name="topMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item row="0" column="0">
+                        <widget class="QLabel" name="label_65">
+                         <property name="text">
+                          <string>视频格式</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="1">
+                        <widget class="QComboBox" name="vTypeComboBox">
+                         <item>
+                          <property name="text">
+                           <string>.mp4</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>.avi</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>.mkv</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>.mov</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                       <item row="1" column="0">
+                        <widget class="QLabel" name="label_62">
+                         <property name="text">
+                          <string>分辨率</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="1">
+                        <widget class="QComboBox" name="vResolutionComboBox">
+                         <item>
+                          <property name="text">
+                           <string>4K</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>2K</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>1080P</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>720P</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>480P</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>360P</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                       <item row="2" column="0">
+                        <widget class="QLabel" name="label_63">
+                         <property name="text">
+                          <string>帧率</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="2" column="1">
+                        <widget class="QComboBox" name="vFrameComboBox">
+                         <item>
+                          <property name="text">
+                           <string>60fps</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>30fps</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>25fps</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>24fps</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>23.97fps</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>20pfs</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>15fps</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>12fps</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                       <item row="3" column="0">
+                        <widget class="QLabel" name="label_64">
+                         <property name="text">
+                          <string>码率</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="3" column="1">
+                        <widget class="QLineEdit" name="vBitLineEdit">
+                         <property name="styleSheet">
+                          <string notr="true">height:20px;
+font-family:&quot;Microsoft YaHei UI&quot;;
+</string>
+                         </property>
+                         <property name="text">
+                          <string>kbps</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
                      </widget>
                     </item>
                    </layout>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushButton">
+                  <widget class="QPushButton" name="runVideoCompressBtn">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>48</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <family>黑体</family>
+                     <pointsize>12</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
                    <property name="text">
                     <string>执行压缩</string>
                    </property>
