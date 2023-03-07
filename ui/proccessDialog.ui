@@ -13,6 +13,25 @@
   <property name="windowTitle">
    <string>正在压缩...</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#Dialog{
+	background-color: rgb(255, 255, 255);
+border-radius:10px;		
+}
+.Widget{
+	border-radius:10px;	
+}
+.QPushButton{
+	border:none;
+	border-radius:5px;
+	width:72px;
+	height:32px;
+	background-color: rgb(126, 123, 123);
+	color:rgb(255, 255, 255);
+	font-family:&quot;黑体&quot;;
+	font-weight:bold;
+}</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>0</number>
@@ -64,8 +83,22 @@
    </item>
    <item>
     <widget class="QProgressBar" name="pb">
+     <property name="styleSheet">
+      <string notr="true">QProgressBar {
+    border: 2px solid grey;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    text-align: center;
+	color:#ffffff #000000;
+}
+
+QProgressBar::chunk {
+    background-color: #373737;
+    width: 20px;
+}</string>
+     </property>
      <property name="value">
-      <number>0</number>
+      <number>50</number>
      </property>
     </widget>
    </item>
@@ -119,6 +152,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="okBtn">
+       <property name="styleSheet">
+        <string notr="true">#okBtn:hover{
+	background-color: rgb(39, 39, 39);
+}</string>
+       </property>
        <property name="text">
         <string>确认</string>
        </property>
@@ -126,6 +164,14 @@
      </item>
      <item>
       <widget class="QPushButton" name="cancelBtn">
+       <property name="styleSheet">
+        <string notr="true">#cancelBtn{
+	background-color: rgb(252, 104, 104);
+}
+#cancelBtn:hover{
+	background-color: rgb(255, 0, 0);
+}</string>
+       </property>
        <property name="text">
         <string>取消</string>
        </property>

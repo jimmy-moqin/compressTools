@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import subprocess
 import time
 
@@ -63,15 +64,14 @@ class VideoPlayThread(QThread):
         self.player.setVideoOutput(videoWidget)
 
         self.isPause = False
-        self.isCancel=False
+        self.isCancel = False
         self.cond = QWaitCondition()
         self.mutex = QMutex()
-        
 
     def pause(self):
         self.isPause = True
         self.player.pause()
-    
+
     def resume(self):
         self.isPause = False
         self.cond.wakeAll()
@@ -81,43 +81,85 @@ class VideoPlayThread(QThread):
         self.player.setPosition(position)
         current_time = self.player.position()
         self.tick.emit(current_time)
-    
+
+    def stop(self):
+        # 线程终止
+        self.isCancel = True
+        print("stop")
 
     def run(self):
-        print("start")
         # 当视频在播放时
         while 1:
-            self.mutex.lock() 
-            if self.isPause:
-                self.cond.wait(self.mutex)
-            elif self.isCancel:
+            self.mutex.lock()
+            if self.isCancel:
+                print("cancel")
                 break
+            elif self.isPause:
+                self.cond.wait(self.mutex)
             elif self.player.state() == QMediaPlayer.PlayingState:
                 # 获取当前播放的时间
                 current_time = self.player.position()
                 self.tick.emit(current_time)
                 time.sleep(0.001)
             self.mutex.unlock()
-            
+
+
 class CompressVideoThread(QThread):
     progressBarValue = pyqtSignal(int)  # 更新进度条
     signal_done = pyqtSignal(int)  # 是否结束信号
-    frames = pyqtSignal(int)  # 帧数信号
+    framesSignal = pyqtSignal(int)  # 帧数信号
 
     def __init__(self, videoCompressInfo):
         super(CompressVideoThread, self).__init__()
+        self.isGPU = videoCompressInfo["isGPU"]
         self.savePath = videoCompressInfo["savePath"]
         self.videoPath = videoCompressInfo["videoPath"]
-        self.videoType = videoCompressInfo["videoType"]
+        self.audioBitRate = videoCompressInfo["audioBitRate"]
         self.videoResolution = videoCompressInfo["videoResolution"]
         self.videoFrameRate = videoCompressInfo["videoFrameRate"]
-        self.videoBitRate = videoCompressInfo["videoBitRate"]
+        self.frames = videoCompressInfo["frames"]
+        self.startTick = str(videoCompressInfo["startTick"])
+        self.endTick = str(videoCompressInfo["endTick"])
 
+        self.isAuto = videoCompressInfo["isAuto"]
+        
+        if self.isAuto:
+            self.limitSize = videoCompressInfo["limitSize"]
+        else:
+            self.videoBitRate = videoCompressInfo["videoBitRate"]
+            self.videoType = videoCompressInfo["videoType"]
+            
 
     def run(self):
-        cmd = "ffmpeg -i {0} -s {1} -r {2} -b:v {3} -y {4}".format(
-            self.videoPath, self.videoResolution, self.videoFrameRate, self.videoBitRate, self.savePath)
-
+        if self.isAuto:
+            # 计算视频码率
+            vbr = (int(self.limitSize) * 1024 * 8 / (int(self.endTick) - int(self.startTick))) - int(self.audioBitRate)
+            if self.isGPU:
+                cmd = [
+                    "powershell.exe", 'ffmpeg', "-v", "quiet", "-stats", '-i', '\"' + self.videoPath + '\"', "-ss",
+                    self.startTick, "-to", self.endTick, '-vcodec', 'h264_nvenc', "-b:v",
+                    str(vbr)+"k","-s",self.videoResolution,"-r",str(self.videoFrameRate) ,"-y", '\"' + self.savePath + '\"', "2>&1 | ForEach-Object {$_ -replace '\\r', '\\n'}"
+                ]
+            else:
+                cmd = [
+                    "powershell.exe", 'ffmpeg', "-v", "quiet", "-stats", '-i', '\"' + self.videoPath + '\"', "-ss",
+                    self.startTick, "-to", self.endTick,  "-b:v",
+                    str(vbr)+"k","-s",self.videoResolution,"-r",str(self.videoFrameRate) ,"-y", '\"' + self.savePath + '\"', "2>&1 | ForEach-Object {$_ -replace '\\r', '\\n'}"
+                ]
+        else:
+            if self.isGPU:
+                cmd = [
+                    "powershell.exe", 'ffmpeg', "-v", "quiet", "-stats", '-i', '\"' + self.videoPath + '\"', "-ss", self.startTick, "-to",
+                    self.endTick, '-vcodec', 'h264_nvenc', '-s', self.videoResolution, '-r', self.videoFrameRate, '-b:v',
+                    self.videoBitRate + "k", '-y', '\"' + self.savePath + '\"', "2>&1 | ForEach-Object {$_ -replace '\\r', '\\n'}"
+                ]
+            else:
+                cmd = [
+                    "powershell.exe", 'ffmpeg', "-v", "quiet", "-stats", '-i', '\"' + self.videoPath + '\"', "-ss", self.startTick, "-to",
+                    self.endTick, '-s', self.videoResolution, '-r', self.videoFrameRate, '-b:v',
+                    self.videoBitRate + "k", '-y', '\"' + self.savePath + '\"', "2>&1 | ForEach-Object {$_ -replace '\\r', '\\n'}"
+                ]
+        print(" ".join(cmd))
         ret = subprocess.Popen(
             cmd,
             shell=True,
@@ -128,16 +170,22 @@ class CompressVideoThread(QThread):
         self.pid = ret.pid
         # 获取处理到第几帧了
         while True:
-            line = ret.stderr.readline()
+
+            line = ret.stdout.readline()
+            print(line)
             if not line:
                 break
             if line.startswith(b"frame"):
-                frame = line.split()[1]
-                self.progressBarValue.emit(int(int(frame) * 100 / int(self.videoFrameRate))) 
-                #TODO # nb_frames
+                # 去除等号后面可能的空格
+                line = re.sub(r"= +", "=", line.decode("utf-8"))
+                frame = line.split()[0].replace("frame=", "")
+                self.progressBarValue.emit(int(int(frame) * 100 / int(self.frames)))  # 发送进度条信号
+                self.framesSignal.emit(int(frame))  # 发送帧数信号
+        self.signal_done.emit(1)  # 发送结束信号
 
     def stop(self):
         os.system("taskkill /pid %d -t -f" % self.pid)
+
 
 class DialogMain(QDialog, Ui_Dialog):
 
@@ -165,12 +213,15 @@ class DialogMain(QDialog, Ui_Dialog):
     def callback_done(self, i):
         self.okBtn.setEnabled(True)
         self.cancelBtn.setEnabled(False)
-        self.tip.setText("压缩完成!")
+        self.tip.setText("处理完成!")
         self.pb.setValue(100)
 
     # 回传页数信号
     def flashPages(self, i):
         self.finishedPages.setText("已完成 {0} 页".format(i))
+
+    def flashFrames(self, i):
+        self.finishedPages.setText("已完成 {0} 帧".format(i))
 
 
 class CompressMain(QWidget, Ui_CompressWidget):
@@ -183,6 +234,9 @@ class CompressMain(QWidget, Ui_CompressWidget):
 
         self.dialog = DialogMain()
 
+        # 设置usage按钮默认选中，以event的方式触发
+        self.usageBtn.click()
+
     def initUI(self):
         self.isMaximized = False
 
@@ -194,6 +248,8 @@ class CompressMain(QWidget, Ui_CompressWidget):
 
         self.isSelectPDF = False
         self.isSelectVideo = False
+
+        self.isGPU = False
 
         self.leftIn = 0
         self.rightOut = self.playerSlider.maximum()
@@ -233,7 +289,6 @@ class CompressMain(QWidget, Ui_CompressWidget):
         self.videoBrowseBtn.clicked.connect(self.selectVideo)
         # 绑定清除选择按钮事件
         self.videoClearBtn.clicked.connect(self.clearVideo)
-
         # 绑定视频播放按钮事件
         self.stopBtn.clicked.connect(self.playEvent)
 
@@ -244,6 +299,17 @@ class CompressMain(QWidget, Ui_CompressWidget):
         # 绑定切入切出事件
         self.leftInBtn.clicked.connect(self.leftInEvent)
         self.rightOutBtn.clicked.connect(self.rightOutEvent)
+
+        # 绑定视频压缩按钮事件
+        self.runVideoCompressBtn.clicked.connect(self.runCompressVideo)
+
+        # 绑定自动压制按钮事件
+        self.autoRadioButton.clicked.connect(self.enableAuto)
+        # 绑定自定义按钮事件
+        self.customizeRadioButton.clicked.connect(self.enableGroupBox)
+
+        # 绑定测试可用性按钮事件
+        self.isAbleBtn.clicked.connect(self.testCUDA)
 
     def closeEvent(self, event):
         # 重写关闭事件
@@ -291,6 +357,9 @@ class CompressMain(QWidget, Ui_CompressWidget):
             self.usageBtn.setStyleSheet("")
             self.isUsageBtnChecked = False
         self.setBtnEnabled()
+
+        # 切换page
+        self.stackedWidget.setCurrentIndex(0)
 
     def pdfBtnEvent(self, event):
         # 重写pdf事件
@@ -380,6 +449,9 @@ class CompressMain(QWidget, Ui_CompressWidget):
             self.isSettingsBtnChecked = False
         self.setBtnEnabled()
 
+        # 切换page
+        self.stackedWidget.setCurrentIndex(3)
+
     def donateBtnEvent(self, event):
         # 重写捐赠事件
         if not self.isDonateBtnChecked:
@@ -405,6 +477,9 @@ class CompressMain(QWidget, Ui_CompressWidget):
             self.donateBtn.setStyleSheet("")
             self.isDonateBtnChecked = False
         self.setBtnEnabled()
+
+        # 切换page
+        self.stackedWidget.setCurrentIndex(4)
 
     def setBtnEnabled(self):
         for btn in [self.usageBtn, self.pdfBtn, self.videoBtn, self.settingsBtn, self.donateBtn]:
@@ -515,32 +590,50 @@ class CompressMain(QWidget, Ui_CompressWidget):
         videoPath, videoType = QFileDialog.getOpenFileName(
             self, "选择视频文件", "", "Video Files (*.mp4 *.avi *.flv *.mkv *.mov *.wmv *.rmvb *.3gp *.webm)")
         if videoPath:
-            self.videoPath = videoPath
-            self.videoPathLineEdit.setText(videoPath)
             # 尝试读取视频
             try:
-                cmd = "ffprobe -v quiet -print_format json -show_format -show_streams {}".format(videoPath)
+                cmd = "ffprobe -v quiet -print_format json -show_format -show_streams \"{}\"".format(videoPath)
                 self.videoInfo = json.loads(subprocess.check_output(cmd, shell=True))
+                self.videoPath = videoPath
+                self.videoPathLineEdit.setText(videoPath)
             except:
                 QMessageBox.warning(self, "错误", "无法读取视频文件，请检查文件是否损坏")
-                self.isSelectVideo = False
                 return
-            # 设置文件信息
-            self.videoPathLabel.setText(os.path.basename(videoPath))
-            self.videoTypeLabel.setText(self.videoInfo["format"]["format_name"])
-            self.videoSizeLabel.setText(str(round(os.path.getsize(videoPath) / 1024 / 1024, 2)) + "MB")
-            self.videoTimeLabel.setText("{}:{}:{}".format(int(float(self.videoInfo["format"]["duration"]) / 3600),
-                                                          int(float(self.videoInfo["format"]["duration"]) / 60),
-                                                          int(float(self.videoInfo["format"]["duration"]) % 60)))
-            self.videoResolutionLabel.setText("{}x{}".format(self.videoInfo["streams"][0]["width"],
-                                                             self.videoInfo["streams"][0]["height"]))
-            self.videoFrameLabel.setText(str(round(eval(self.videoInfo["streams"][0]["r_frame_rate"]), 2)) + "fps")
-            self.videoBitLabel.setText("{}kbps".format(int(int(self.videoInfo["streams"][0]["bit_rate"]) / 1024)))
-            self.audioBitLabel.setText("{}kbps".format(int(int(self.videoInfo["streams"][1]["bit_rate"]) / 1024)))
-            self.audioChannelLabel.setText("{}".format(self.videoInfo["streams"][1]["channels"]))
-            self.audioSampleLabel.setText("{}Hz".format(self.videoInfo["streams"][1]["sample_rate"]))
 
-            self.isSelectVideo = True
+            # 设置文件信息
+            # 先判断视频在第几轨道
+            for i in range(len(self.videoInfo["streams"])):
+                if self.videoInfo["streams"][i]["codec_type"] == "video":
+                    videoTrack = i
+                elif self.videoInfo["streams"][i]["codec_type"] == "audio":
+                    audioTrack = i
+
+            if len(os.path.basename(videoPath)) > 11:
+                self.videoPathLabel.setText(os.path.basename(videoPath)[:11] + "...")
+            else:
+                self.videoPathLabel.setText(os.path.basename(videoPath))
+            self.videoTypeLabel.setText(self.videoInfo["format"]["format_name"][:15])
+            self.videoSizeLabel.setText(str(round(os.path.getsize(videoPath) / 1024 / 1024, 2)) + "MB")
+            self.videoTimeLabel.setText("{:02d}:{:02d}:{:02d}".format(
+                int(float(self.videoInfo["format"]["duration"]) / 3600),
+                int(float(self.videoInfo["format"]["duration"]) / 60),
+                int(float(self.videoInfo["format"]["duration"]) % 60)))
+            self.videoResolutionLabel.setText("{}x{}".format(self.videoInfo["streams"][videoTrack]["width"],
+                                                             self.videoInfo["streams"][videoTrack]["height"]))
+            self.videoFrameLabel.setText(
+                str(round(eval(self.videoInfo["streams"][videoTrack]["r_frame_rate"]), 2)) + "fps")
+            self.videoBitLabel.setText("{}kbps".format(
+                int(int(self.videoInfo["streams"][videoTrack]["bit_rate"]) / 1024)))
+            self.audioBitLabel.setText("{}kbps".format(
+                int(int(self.videoInfo["streams"][audioTrack]["bit_rate"]) / 1024)))
+            self.audioChannelLabel.setText("{}".format(self.videoInfo["streams"][audioTrack]["channels"]))
+            self.audioSampleLabel.setText("{}Hz".format(self.videoInfo["streams"][audioTrack]["sample_rate"]))
+
+            # 设置剪辑信息初始值
+            self.startTickLabel.setText("00:00:00")
+            self.endTickLabel.setText(self.videoTimeLabel.text())
+            self.durTimeLabel.setText(self.videoTimeLabel.text())
+
             self.startVideo()
         else:
             QMessageBox.warning(self, "错误", "请选择视频文件")
@@ -570,8 +663,25 @@ class CompressMain(QWidget, Ui_CompressWidget):
         self.playerSlider.setValue(0)
         self.playerSlider.setMaximum(int(float(self.videoInfo["format"]["duration"]) * 1000))
 
+        # # 设置时间初始化
+        # self.tickLabel.setText("00:00:00.000")
+
+        # 设置左右widget长度为0
+        self.leftCutWidget.setFixedWidth(0)
+        self.rightCutWidget.setFixedWidth(0)
+
+        # 如果有视频播放线程,则停止
+        if self.isSelectVideo:
+            self.videoPlayThread.resume()
+            self.videoPlayThread.stop()
+            del self.videoPlayThread
+
         self.videoPlayThread = VideoPlayThread(self.videoPath, self.playerWidget)
         self.videoPlayThread.start()
+        # 启动后视频暂停，线程立即挂起，否则会占用很多资源
+        self.videoPlayThread.pause()
+        self.stopBtn.setIcon(QIcon(":/basic/play.png"))
+        self.isSelectVideo = True
         self.videoPlayThread.tick.connect(self.flashTime)
 
     def playEvent(self):
@@ -586,7 +696,7 @@ class CompressMain(QWidget, Ui_CompressWidget):
         else:
             QMessageBox.warning(self, "错误", "请选择视频文件")
 
-    def flashTime(self,i):
+    def flashTime(self, i):
         # 刷新时间
         self.playerSlider.setValue(i)
         h = int(i / 3600000)
@@ -600,7 +710,7 @@ class CompressMain(QWidget, Ui_CompressWidget):
         self.videoPlayThread.seek(tick)
         self.playerSlider.setValue(tick)
         self.flashTime(tick)
-    
+
     def sliderPressed(self):
         self.videoPlayThread.pause()
         self.stopBtn.setIcon(QIcon(":/basic/play.png"))
@@ -609,7 +719,7 @@ class CompressMain(QWidget, Ui_CompressWidget):
         # 左边进
         self.videoPlayThread.pause()
         self.stopBtn.setIcon(QIcon(":/basic/play.png"))
-        
+
         if self.playerSlider.value() > self.rightOut:
             self.rightOut = self.playerSlider.maximum()
             self.rightCutWidget.setMinimumWidth(0)
@@ -645,20 +755,25 @@ class CompressMain(QWidget, Ui_CompressWidget):
         # 获取进度条的最大值
         sliderMax = self.playerSlider.maximum()
         # 计算比率
-        ratioWidth = ((sliderMax-self.rightOut) / sliderMax) * sliderWidth
+        ratioWidth = ((sliderMax - self.rightOut) / sliderMax) * sliderWidth
         # 设置右侧弹簧长度
         self.rightCutWidget.setMinimumWidth(ratioWidth)
 
         # 记录右边出的时间
         self.endTickLabel.setText(self.getTick(self.rightOut))
         self.getDuration()
-    
-    def getTick(self,position):
+
+    def getTick(self, position):
         # 获取时间
         h = int(position / 3600000)
         m = int((position - h * 3600000) / 60000)
         s = int((position - h * 3600000 - m * 60000) / 1000)
         return "{:02d}:{:02d}:{:02d}".format(h, m, s)
+
+    def getSec(self, tick):
+        # 获取秒数
+        h, m, s = tick.split(":")
+        return int(h) * 3600 + int(m) * 60 + int(s)
 
     def getDuration(self):
         # 计算剪辑的起止时间差
@@ -668,5 +783,98 @@ class CompressMain(QWidget, Ui_CompressWidget):
         m = int(((end - start) - h * 3600000) / 60000)
         s = int(((end - start) - h * 3600000 - m * 60000) / 1000)
         self.durTimeLabel.setText("{:02d}:{:02d}:{:02d}".format(h, m, s))
-        
+
     def runCompressVideo(self):
+        # 开始压制
+        # 获取保存路径
+        savePath = QFileDialog.getSaveFileName(self, "保存视频", "", "MP4(*.mp4)")[0]
+        if savePath:
+            # 获取压制信息
+            self.vInfo = {}
+            if self.isGPU:
+                self.vInfo["isGPU"] = True
+            else:
+                self.vInfo["isGPU"] = False
+            if self.autoRadioButton.isChecked():
+                self.vInfo["isAuto"] = True
+                self.vInfo["savePath"] = savePath
+                self.vInfo["videoPath"] = self.videoPathLineEdit.text()
+                self.vInfo["limitSize"] = str(int(self.limitSizeLineEdit.text()) - 5)
+                self.vInfo["videoResolution"] = self.videoDefaultResolutionComboBox.currentText()
+                self.vInfo["videoFrameRate"] = self.videoDefaultFrameRateLineEdit.text()
+                self.vInfo["audioBitRate"] = self.audioBitLabel.text().replace("kbps", "")
+                self.vInfo["frames"] = int(
+                    (self.getSec(self.endTickLabel.text()) - self.getSec(self.startTickLabel.text())) * 20)
+                self.vInfo["startTick"] = self.getSec(self.startTickLabel.text())
+                self.vInfo["endTick"] = self.getSec(self.endTickLabel.text())
+            elif self.customizeRadioButton.isChecked():
+                self.vInfo["isAuto"] = False
+                self.vInfo["savePath"] = savePath
+                self.vInfo["videoPath"] = self.videoPathLineEdit.text()
+                self.vInfo["videoType"] = self.vTypeComboBox.currentText()
+                self.vInfo["videoResolution"] = self.vResolutionComboBox.currentText()
+                self.vInfo["videoFrameRate"] = self.vFrameComboBox.currentText().replace("fps", "")
+                self.vInfo["videoBitRate"] = self.vBitLineEdit.text()
+                self.vInfo["audioBitRate"] = self.audioBitLabel.text().replace("kbps", "")
+                self.vInfo["frames"] = int(
+                    (self.getSec(self.endTickLabel.text()) - self.getSec(self.startTickLabel.text())) *
+                    float(self.vFrameComboBox.currentText().replace("fps", "")))
+                self.vInfo["startTick"] = self.getSec(self.startTickLabel.text())
+                self.vInfo["endTick"] = self.getSec(self.endTickLabel.text())
+
+            # 弹出对话框
+            self.dialog.setWindowModality(Qt.ApplicationModal)
+            self.dialog.tip.setText("正在压制视频,请稍后...")
+            self.dialog.finishedPages.setText("已完成 {} 帧".format(0))
+            self.dialog.totalPages.setText("共约 {} 帧".format(self.vInfo["frames"]))
+            self.dialog.pb.setValue(0)
+            self.dialog.show()
+
+            # 开始压制
+            self.cvThread = CompressVideoThread(self.vInfo)
+            self.cvThread.start()
+            self.cvThread.progressBarValue.connect(self.dialog.callback)
+            self.cvThread.framesSignal.connect(self.dialog.flashFrames)
+            self.cvThread.signal_done.connect(self.dialog.callback_done)
+            # 如果点击Cancel,则停止压缩
+            self.dialog.cancelBtn.clicked.connect(self.cvThread.stop)
+        else:
+            QMessageBox.warning(self, "错误", "请选择保存路径")
+            return
+
+    def enableGroupBox(self):
+        if self.customizeRadioButton.isChecked():
+            self.groupBox.setEnabled(True)
+
+    def enableAuto(self):
+        if self.autoRadioButton.isChecked():
+            self.groupBox.setEnabled(False)
+
+    def testCUDA(self):
+        # 测试CUDA是否可用
+        if self.hwComboBox.currentText() == "CPU":
+            self.isGPU = False
+        else:
+            cmd = "nvidia-smi"
+            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            out, err = p.communicate()
+            if err:
+                print(err)
+                QMessageBox.warning(self, "错误", "CUDA不可用,请检查CUDA是否安装")
+                return False
+            else:
+                cmd = "ffmpeg -v quiet -hwaccels"
+                p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                out, err = p.communicate()
+                if out:
+                    hwList = out.decode("utf-8").split("\r\n")
+                    for hw in hwList:
+                        if hw == "cuda":
+                            self.isGPU = True
+                            QMessageBox.information(self, "提示", "CUDA可用")
+                            break
+                    else:
+                        self.isGPU = False
+                        QMessageBox.warning(self, "错误", "CUDA不可用,请检查CUDA是否安装")
+
+
